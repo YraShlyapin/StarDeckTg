@@ -96,7 +96,7 @@ public class News extends NewsContent {
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, new Gson().toJson(this, NewsContent.class));
         Request request = new Request.Builder()
-                .url("http://localhost/api/News" + id)
+                .url("http://localhost/api/News/" + id)
                 .addHeader("Content-Type", "application/json")
                 .delete()
                 .build();
