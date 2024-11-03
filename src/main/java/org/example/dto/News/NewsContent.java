@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.News;
 
 public class NewsContent {
     private String title;

@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.dto.News;
-import org.example.dto.Subject;
+import org.example.dto.*;
+import org.example.dto.News.*;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,6 +13,11 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
 
     private TelegramClient telegramClient = new OkHttpTelegramClient("8195689343:AAE0vkGTCjZ3JsB_orV9in8fW_b2xygM1QA");
+
+    private CreatorNews creatorNews = new CreatorNews();
+    private DeleterNews deleterNews = new DeleterNews();
+    private GetterNews getterNews = new GetterNews();
+
     Activity activity = Activity.Main;
 
     @Override
@@ -46,7 +51,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                             break;
                         case "allNews":
                             try {
-                                News[] news = new News().getAllNews();
+                                News[] news = getterNews.getAllNews();
 
                                 for (int i = 0; i < news.length; i++) {
                                     SendMessage message = SendMessage
@@ -90,34 +95,41 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                     }
                     break;
                 case DeleteNews:
-                    try {
-                        try {
-                            int a = Integer.parseInt(message_text);
-                            News news = new News().deleteNews(a);
-
-                            SendMessage message = SendMessage
-                                    .builder()
-                                    .chatId(chat_id)
-                                    .text(news.toString())
-                                    .build();
-                            telegramClient.execute(message);
+                    switch (message_text) {
+                        case "main":
                             activity = Activity.Main;
-                        } catch (NumberFormatException e) {
-                            SendMessage message = SendMessage
-                                    .builder()
-                                    .chatId(chat_id)
-                                    .text("введите корректный id")
-                                    .build();
-                            telegramClient.execute(message);
-                        }
-                    } catch (TelegramApiException e) {
-                        throw new RuntimeException(e);
+                            break;
+                        default:
+                            try {
+                                try {
+                                    int a = Integer.parseInt(message_text);
+                                    News news = deleterNews.deleteNews(a);
+
+                                    SendMessage message = SendMessage
+                                            .builder()
+                                            .chatId(chat_id)
+                                            .text(news.toString())
+                                            .build();
+                                    telegramClient.execute(message);
+                                    activity = Activity.Main;
+                                } catch (NumberFormatException e) {
+                                    SendMessage message = SendMessage
+                                            .builder()
+                                            .chatId(chat_id)
+                                            .text("введите корректный id")
+                                            .build();
+                                    telegramClient.execute(message);
+                                }
+                            } catch (TelegramApiException e) {
+                                throw new RuntimeException(e);
+                            }
+                            break;
                     }
                     break;
                 case PostNews:
                     try {
                         String[] all =  message_text.split("\n");
-                        News news = new News(all[0], all[1]).postNews();
+                        News news = creatorNews.createNews(new NewsContent(all[0], all[1]));
 
                         SendMessage message = SendMessage
                                 .builder()
