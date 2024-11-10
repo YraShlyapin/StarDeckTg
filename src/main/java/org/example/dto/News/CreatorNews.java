@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class CreatorNews {
 
-    public News createNews(NewsContent newsContent) {
+    public static News createNews(NewsContent newsContent) {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");

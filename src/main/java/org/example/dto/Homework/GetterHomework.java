@@ -1,4 +1,4 @@
-package org.example.dto.News;
+package org.example.dto.Homework;
 
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
@@ -7,12 +7,12 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
-public class GetterNews {
-    public static News[] getAllNews() {
+public class GetterHomework {
+    public static Homework[] getAllHomeworks() {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://localhost/api/AllNews")
+                .url("http://localhost/api/AllHomeworks")
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -20,19 +20,18 @@ public class GetterNews {
         try {
             Response response = client.newCall(request).execute();
 
-            News[] news = new Gson().fromJson(response.body().string(), News[].class);
+            Homework[] news = new Gson().fromJson(response.body().string(), Homework[].class);
             return news;
         } catch (IOException e) {
-            return new News[]{};
-//            throw new RuntimeException(e);
+            return new Homework[]{};
         }
     }
 
-    public static News[] getNewsById(int id) {
+    public static Homework getHomeworkById(int id) {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url("http://localhost/api/News/" + id)
+                .url("http://localhost/api/Homework/" + id)
                 .addHeader("Content-Type", "application/json")
                 .get()
                 .build();
@@ -40,10 +39,10 @@ public class GetterNews {
         try {
             Response response = client.newCall(request).execute();
 
-            News[] news = new Gson().fromJson(response.body().string(), News[].class);
+            Homework news = new Gson().fromJson(response.body().string(), Homework.class);
             return news;
         } catch (IOException e) {
-            return new News[]{};
+            return new Homework();
         }
     }
 }

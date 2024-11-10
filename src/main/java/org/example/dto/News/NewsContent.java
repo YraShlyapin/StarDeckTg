@@ -27,4 +27,8 @@ public class NewsContent {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String format() {
+        return "*" + this.title + "*\n\n" + this.content;
+    }
 }
