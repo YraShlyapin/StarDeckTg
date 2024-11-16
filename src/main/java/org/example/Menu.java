@@ -16,8 +16,7 @@ public class Menu {
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Новости"), new KeyboardButton("Учеба")));
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Анонсы")));
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Настройки")));
-
-        if (role == "HEADMEN") {
+        if (role.equals("HEADMAN")) {
             keyboardRows.add(new KeyboardRow(new KeyboardButton("Дела старост")));
         }
 

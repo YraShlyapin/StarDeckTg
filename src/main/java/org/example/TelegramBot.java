@@ -1,8 +1,12 @@
 package org.example;
 
+import org.example.dto.User.CreatorUser;
+import org.example.dto.User.GetterUser;
 import org.example.dto.Homework.GetterHomework;
 import org.example.dto.Homework.Homework;
 import org.example.dto.News.*;
+import org.example.dto.User.User;
+import org.example.dto.User.UserContent;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -31,11 +35,16 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
             System.out.println(message_text);
 
             if (message_text.equals("/start")) {
+                User current_user = GetterUser.getUserByChatId(chat_id);
+                if (current_user == null) {
+                    UserContent userContent = new UserContent(chat_id);
+                    current_user = CreatorUser.createUser(userContent);
+                }
                 SendMessage message = SendMessage
                         .builder()
                         .chatId(chat_id)
                         .text(message_text)
-                        .replyMarkup(Menu.mainMenu("HEADMEN"))
+                        .replyMarkup(Menu.mainMenu(current_user.getRole()))
                         .build();
                 try {
                     telegramClient.execute(message);
