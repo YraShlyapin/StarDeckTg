@@ -28,7 +28,7 @@ public class Menu {
 
     public static ReplyKeyboardMarkup headmenMenu() {
         List<KeyboardRow> keyboardRows = new ArrayList<>();
-        keyboardRows.add(new KeyboardRow(new KeyboardButton("Создать новости"), new KeyboardButton("Удалить новость")));
+        keyboardRows.add(new KeyboardRow(new KeyboardButton("Создать новости"), new KeyboardButton("Назад")));
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(keyboardRows);
         keyboardMarkup.setResizeKeyboard(true);
@@ -36,7 +36,27 @@ public class Menu {
         return keyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup deleteButton(int id) {
+        List<InlineKeyboardRow> keyboardRows = new ArrayList<>() {};
+
+        InlineKeyboardButton deleteButton = InlineKeyboardButton
+                .builder()
+                .text("удалить")
+                .callbackData("news_"+id+"_delete")
+                .build();
+
+        keyboardRows.add(new InlineKeyboardRow(deleteButton));
+
+        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(keyboardRows);
+
+        return keyboardMarkup;
+    }
+
     public static InlineKeyboardMarkup newsMenu(int id, int length) {
+        if (length != 0) {
+            return null;
+        }
+
         List<InlineKeyboardRow> keyboardRows = new ArrayList<>();
 
         InlineKeyboardButton leftButton = InlineKeyboardButton
@@ -60,7 +80,6 @@ public class Menu {
         }
 
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(keyboardRows);
-
         return keyboardMarkup;
     }
 
