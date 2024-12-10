@@ -4,6 +4,7 @@ public class UserContent {
     private long chat_id;
     private String name;
     private String role;
+    private int activity;
 
     public UserContent() {
     }
@@ -45,5 +46,13 @@ public class UserContent {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public int getActivity() {
+        return activity;
+    }
+
+    public void setActivity(int activity) {
+        this.activity = activity;
     }
 }

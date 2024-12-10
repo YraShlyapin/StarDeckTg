@@ -53,7 +53,7 @@ public class Menu {
     }
 
     public static InlineKeyboardMarkup newsMenu(int id, int length) {
-        if (length != 0) {
+        if (length <= 1) {
             return null;
         }
 

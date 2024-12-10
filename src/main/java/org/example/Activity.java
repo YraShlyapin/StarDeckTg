@@ -4,5 +4,4 @@ public enum Activity {
     Main,
     DelaStarost,
     CreateNews,
-    DeleteNews
 }
