@@ -93,7 +93,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                             }
                         }
                     }
-                    //TODO доделать
                     else if (message_text.equalsIgnoreCase("Учеба")) {
                         Homework[] homeworks = GetterHomework.getAllHomeworks();
                         SendMessage message;
@@ -151,7 +150,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                     }
                     break;
                 }
-                //TODO доделать
                 case Setting: {
                     if (message_text.equalsIgnoreCase("запросить доступ")) {
                         String role = current_user.getRole().equalsIgnoreCase("HEADMAN") ? "USER" : "HEADMAN";
@@ -221,7 +219,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                                 .builder()
                                 .chatId(chat_id)
                                 .text("Введите текст в формате:\nНазвание статьи\nОсновной текст статьи")
-                                .replyMarkup(Menu.headmenMenu())
+                                .replyMarkup(Menu.cansel())
                                 .build();
                         try {
                             telegramClient.execute(message);
@@ -230,7 +228,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                         }
                         SetterForUser.setActivity(current_user.getId(),Activity.CreateNews.ordinal());
                     }
-                    //TODO доделать
                     else if (message_text.equalsIgnoreCase("учеба")) {
                         Homework[] All_homework = GetterHomework.getAllHomeworks();
 
@@ -263,7 +260,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                             }
                         }
                     }
-                    //TODO доделать
                     else if (message_text.equalsIgnoreCase("Создать ДЗ")) {
                         SendMessage message = SendMessage
                                 .builder()
@@ -294,22 +290,35 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                     break;
                 }
                 case CreateNews: {
-                    if (message_text.equalsIgnoreCase("назад")) {
+                    if (message_text.equalsIgnoreCase("отменить")  || message_text.equalsIgnoreCase("назад")) {
                         SendMessage message = SendMessage
                                 .builder()
                                 .chatId(chat_id)
                                 .text(message_text)
-                                .replyMarkup(Menu.mainMenu(current_user.getRole()))
+                                .replyMarkup(Menu.headmenMenu())
                                 .build();
                         try {
                             telegramClient.execute(message);
                         } catch (TelegramApiException e) {
                             throw new RuntimeException(e);
                         }
-                        SetterForUser.setActivity(current_user.getId(), Activity.Main.ordinal());
+                        SetterForUser.setActivity(current_user.getId(), Activity.DelaStarost.ordinal());
                     } else {
                         String[] components = message_text.split("\n", 2);
-                        System.out.println(components[1]);
+                        if (components.length < 2) {
+                            SendMessage message = SendMessage
+                                    .builder()
+                                    .chatId(chat_id)
+                                    .text("некорректный ввод")
+                                    .build();
+                            try {
+                                telegramClient.execute(message);
+                            } catch (TelegramApiException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return;
+                        }
+
                         CreatorNews.createNews(new NewsContent(components[0], components[1]));
 
                         SendMessage message = SendMessage
@@ -329,23 +338,35 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                     break;
                 }
                 case CreateDZ: {
-                    if (message_text.equalsIgnoreCase("отменить")) {
+                    if (message_text.equalsIgnoreCase("отменить") || message_text.equalsIgnoreCase("назад")) {
                         SendMessage message = SendMessage
                                 .builder()
                                 .chatId(chat_id)
                                 .text(message_text)
-                                .replyMarkup(Menu.mainMenu(current_user.getRole()))
+                                .replyMarkup(Menu.headmenMenu())
                                 .build();
                         try {
                             telegramClient.execute(message);
                         } catch (TelegramApiException e) {
                             throw new RuntimeException(e);
                         }
-                        SetterForUser.setActivity(current_user.getId(), Activity.Main.ordinal());
+                        SetterForUser.setActivity(current_user.getId(), Activity.DelaStarost.ordinal());
                     } else {
                         String[] components = message_text.split("\n", 2);
-                        System.out.println(components[1]);
-                        CreatorHomework.createHomework(new HomeworkContent(components[0], components[1]));
+                        if (components.length < 2) {
+                            SendMessage message = SendMessage
+                                    .builder()
+                                    .chatId(chat_id)
+                                    .text("некорректный ввод")
+                                    .build();
+                            try {
+                                telegramClient.execute(message);
+                            } catch (TelegramApiException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return;
+                        }
+                        CreatorHomework.createHomework(new HomeworkContent(components[0], components[1], current_user.getCurrent_Subject()));
 
                         SendMessage message = SendMessage
                                 .builder()
@@ -447,11 +468,29 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
+                }else
+                if (commands[2].equals("status")) {
+                    int now_id = Integer.parseInt(commands[1]);
+                    int homework_id = GetterHomework.getAllHomeworks()[now_id].getId();
+                    UpdaterStatusHomework.UpdateStatus(homework_id);
+                    Homework[] homeworks = GetterHomework.getAllHomeworks();
+
+                    EditMessageText new_message = EditMessageText.builder()
+                            .chatId(chat_id)
+                            .messageId((int) message_id)
+                            .text(homeworks[now_id].format())
+                            .replyMarkup(MessageMenu.homeworkMenu(now_id, homeworks.length, homeworks[now_id].isDone()))
+                            .build();
+                    new_message.enableMarkdown(true);
+                    try {
+                        telegramClient.execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             else if (call_data.contains("subject")) {
                 if (commands[2].equals("choose")) {
-                    DeleterHomework.deleteHomework(Integer.parseInt(commands[1]));
                     DeleteMessage deleteMessage = DeleteMessage.builder()
                             .chatId(chat_id)
                             .messageId((int)message_id)
@@ -466,6 +505,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                             .builder()
                             .chatId(chat_id)
                             .text("Введите текст в формате:\nНазвание ДЗ\nСуть ДЗ")
+                            .replyMarkup(Menu.cansel())
                             .build();
                     try {
                         telegramClient.execute(message);
@@ -473,6 +513,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
                         throw new RuntimeException(e);
                     }
                     SetterForUser.setActivity(current_user.getId(), Activity.CreateDZ.ordinal());
+                    SetterForUser.setCurrentSubject(current_user.getId(), Integer.parseInt(commands[1]));
                 }
             }
         }

@@ -14,7 +14,6 @@ public class Menu {
     public static ReplyKeyboardMarkup mainMenu(String role) {
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Новости"), new KeyboardButton("Учеба")));
-//        keyboardRows.add(new KeyboardRow(new KeyboardButton("Анонсы")));
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Настройки")));
         if (role.equals("HEADMAN")) {
             keyboardRows.add(new KeyboardRow(new KeyboardButton("Дела старост")));
@@ -43,6 +42,16 @@ public class Menu {
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Запросить доступ")));
 //        keyboardRows.add(new KeyboardRow(new KeyboardButton("Учеба"), new KeyboardButton("Создать ДЗ")));
         keyboardRows.add(new KeyboardRow(new KeyboardButton("Назад")));
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(keyboardRows);
+        keyboardMarkup.setResizeKeyboard(true);
+
+        return keyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup cansel() {
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        keyboardRows.add(new KeyboardRow(new KeyboardButton("Отменить")));
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(keyboardRows);
         keyboardMarkup.setResizeKeyboard(true);

@@ -27,4 +27,23 @@ public class GetterSubject {
             return new Subject[]{};
         }
     }
+
+    public static Subject getSubjectById(int id) {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request request = new Request.Builder()
+                .url("http://localhost/api/Subject/" + id)
+                .addHeader("Content-Type", "application/json")
+                .get()
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+
+            Subject subject = new Gson().fromJson(response.body().string(), Subject.class);
+            return subject;
+        } catch (IOException e) {
+            return new Subject();
+        }
+    }
 }

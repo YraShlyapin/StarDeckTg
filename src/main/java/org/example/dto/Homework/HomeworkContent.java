@@ -1,5 +1,8 @@
 package org.example.dto.Homework;
 
+import org.example.dto.Subject.GetterSubject;
+import org.example.dto.Subject.Subject;
+
 public class HomeworkContent {
     private String title;
     private String description;
@@ -11,6 +14,12 @@ public class HomeworkContent {
     public HomeworkContent(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public HomeworkContent(String title, String description, int id_subject) {
+        this.title = title;
+        this.description = description;
+        this.id_subject = id_subject;
     }
 
     public HomeworkContent(String title, String description, boolean status, int id_subject) {
@@ -53,8 +62,10 @@ public class HomeworkContent {
     }
 
     public String format() {
-        return "*" + this.title + "*\n\n"
+        Subject subject = GetterSubject.getSubjectById(id_subject);
+
+        return "*" + subject.getAbbreviation() + "*\n\n"
                 + this.description + "\n\n"
-                + (this.status ? "сделано" : "несделано");
+                + (this.status ? "Сделано" : "Не сделано");
     }
 }

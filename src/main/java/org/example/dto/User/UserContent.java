@@ -4,6 +4,7 @@ public class UserContent {
     private long chat_id;
     private String name;
     private String role;
+    private int current_Subject;
     private int activity;
 
     public UserContent() {
@@ -23,6 +24,8 @@ public class UserContent {
         this.name = name;
         this.role = role;
     }
+
+
 
     public long getChat_id() {
         return chat_id;
@@ -54,5 +57,13 @@ public class UserContent {
 
     public void setActivity(int activity) {
         this.activity = activity;
+    }
+
+    public int getCurrent_Subject() {
+        return current_Subject;
+    }
+
+    public void setCurrent_Subject(int current_Subject) {
+        this.current_Subject = current_Subject;
     }
 }

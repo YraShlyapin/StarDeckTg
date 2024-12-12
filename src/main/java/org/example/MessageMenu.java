@@ -62,21 +62,23 @@ public class MessageMenu {
         InlineKeyboardButton doneButton = InlineKeyboardButton
                 .builder()
                 .text("сделать ✅")
-                .callbackData("homework_"+id+"_done")
+                .callbackData("homework_"+id+"_status")
                 .build();
 
         InlineKeyboardButton undoneButton = InlineKeyboardButton
                 .builder()
                 .text("отменить ❌")
-                .callbackData("homework_"+id+"_undone")
+                .callbackData("homework_"+id+"_status")
                 .build();
 
-        if (id == 0) {
-            keyboardRows.add(new InlineKeyboardRow(rightButton));
-        } else if (id == length-1) {
-            keyboardRows.add(new InlineKeyboardRow(leftButton));
-        } else {
-            keyboardRows.add(new InlineKeyboardRow(leftButton, rightButton));
+        if (length>1){
+            if (id == 0) {
+                keyboardRows.add(new InlineKeyboardRow(rightButton));
+            } else if (id == length-1) {
+                keyboardRows.add(new InlineKeyboardRow(leftButton));
+            } else {
+                keyboardRows.add(new InlineKeyboardRow(leftButton, rightButton));
+            }
         }
 
         if (isDone) {

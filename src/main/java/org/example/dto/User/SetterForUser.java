@@ -41,4 +41,22 @@ public class SetterForUser {
             throw new RuntimeException(e);
         }
     }
+
+    public static void setCurrentSubject(int id, int id_subject) {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        RequestBody requestBody = RequestBody.create(null, new byte[0]);
+        Request request = new Request.Builder()
+                .url("http://localhost/api/setCurrentSubject/" + id + "/" + id_subject)
+                .addHeader("Content-Type", "application/json")
+                .put(requestBody)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            response.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
