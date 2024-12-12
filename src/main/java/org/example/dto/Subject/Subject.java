@@ -1,7 +1,6 @@
-package org.example.dto;
+package org.example.dto.Subject;
 
 import com.google.gson.Gson;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -11,6 +10,7 @@ import java.io.IOException;
 public class Subject {
     private int id;
     private String name;
+    private String abbreviation;
 
     public Subject() {
 
@@ -39,6 +39,14 @@ public class Subject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     public Subject[] getAllSubjects() {
